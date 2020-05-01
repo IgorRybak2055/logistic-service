@@ -1,0 +1,27 @@
+version: '3'
+services:
+  postgres:
+    image: "postgres:latest"
+    env_file:
+      - ../config/database.env # configure postgres
+    ports:
+      - '5432:5432'
+    expose:
+      - '5432'
+#    volumes:
+#      - database-data:/var/lib/postgresql/data/
+
+#  apiserver:
+#    build:
+#      context: ..
+#      dockerfile: ./deployments/dockerfile
+#    restart: on-failure
+#    env_file:
+#      - ../config/ragger.env
+#    depends_on:
+#      - postgres
+#    ports:
+#      - 8100:8100
+
+volumes:
+  database-data:
