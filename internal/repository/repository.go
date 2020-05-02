@@ -14,6 +14,11 @@ import (
 	"github.com/IgorRybak2055/logistic-service/internal/models"
 )
 
+// Company represents possible database actions with an account.
+type Company interface {
+	Create(ctx context.Context, company models.Company) (models.Company, error)
+}
+
 // Account represents possible database actions with an account.
 type Account interface {
 	CreateAccount(ctx context.Context, account models.Account) (models.Account, error)

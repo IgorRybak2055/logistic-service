@@ -24,7 +24,7 @@ export GOPROXY=direct
 
 .PHONY: configs.env
 configs.env:
-	cp config/ragger_example.env config/ragger.env
+	cp config/logistic_example.env config/logistic.env
 	cp config/database_example.env config/database.env
 
 .PHONY: test
@@ -38,3 +38,9 @@ run:
 .PHONY: swagger
 swagger:
 	$(HOME)/go/bin/swag init -g ./cmd/main.go
+
+export POSTGRESQL_URL='postgres://logistic:logistic@localhost:5432/logistic?sslmode=disable'
+
+.PHONY: migrate
+migrate:
+	migrate -database ${POSTGRESQL_URL} -path migrations up

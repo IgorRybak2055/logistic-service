@@ -19,20 +19,24 @@ definitions:
       updatedAt:
         type: string
     type: object
-  models.Project:
+  models.Company:
     properties:
+      bank_detail:
+        type: string
       createdAt:
         type: string
-      description:
+      email:
         type: string
       id:
         type: integer
-      title:
+      kind:
+        type: string
+      name:
+        type: string
+      phone:
         type: string
       updatedAt:
         type: string
-      userID:
-        type: integer
     type: object
 host: localhost:8100
 info:
@@ -45,7 +49,35 @@ info:
   title: Ragger API
   version: "1.0"
 paths:
-  /api/health:
+  /api/company/register:
+    post:
+      description: Create a new company.
+      parameters:
+      - description: company
+        in: body
+        name: company
+        required: true
+        schema:
+          $ref: '#/definitions/models.Company'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'response structure: {message:"answer"}'
+          schema:
+            $ref: '#/definitions/models.Account'
+        "400":
+          description: 'response structure: {error:"error message"}'
+          schema:
+            type: string
+        "500":
+          description: 'response structure: {error:"error message"}'
+          schema:
+            type: string
+      summary: Registration company of logistic-service service
+      tags:
+      - Company
+  /health:
     get:
       description: Health check ragger service
       produces:
@@ -56,259 +88,6 @@ paths:
           schema:
             type: string
       summary: Ragger health check
-  /api/login:
-    post:
-      description: Login in ragger with email and password
-      parameters:
-      - description: account email
-        in: query
-        name: email
-        required: true
-        type: string
-      - description: account password len(password) > 6
-        in: query
-        name: password
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 'response structure: {message:"answer"}'
-          schema:
-            $ref: '#/definitions/models.Account'
-        "400":
-          description: 'response structure: {error:"error message"}'
-          schema:
-            type: string
-      summary: Login in ragger
-      tags:
-      - Account
-  /api/new_password:
-    post:
-      description: Setting new password for account
-      parameters:
-      - description: new password for account
-        in: query
-        name: password
-        required: true
-        type: string
-      - description: confirm_password new password
-        in: query
-        name: confirm_password
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200": {}
-        "400":
-          description: 'response structure: {error:"error message"}'
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: Set new password
-      tags:
-      - Account
-  /api/projects:
-    get:
-      description: Get all projects of authorized user.
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 'response structure: {message:[]project}'
-          schema:
-            items:
-              $ref: '#/definitions/models.Project'
-            type: array
-        "400":
-          description: 'response structure: {error:"error message"}'
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: Get all projects of user.
-      tags:
-      - Project
-    post:
-      description: Creating new project with title and description.
-      parameters:
-      - description: project title
-        in: query
-        name: title
-        required: true
-        type: string
-      - description: project description
-        in: query
-        name: description
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: 'response structure: {message:project}'
-          schema:
-            $ref: '#/definitions/models.Project'
-        "400":
-          description: 'response structure: {error:"error message"}'
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: Creating new project.
-      tags:
-      - Project
-  /api/projects/{project_id}:
-    delete:
-      description: Delete project by ID of authorized user.
-      parameters:
-      - description: project title
-        in: path
-        name: project_id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200": {}
-        "400":
-          description: 'response structure: {error:"error message"}'
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: Delete projects by ID.
-      tags:
-      - Project
-    get:
-      description: Get project of authorized user by ID.
-      parameters:
-      - description: project title
-        in: path
-        name: project_id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 'response structure: {message:project}'
-          schema:
-            $ref: '#/definitions/models.Project'
-        "400":
-          description: 'response structure: {error:"error message"}'
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: Get projects by ID.
-      tags:
-      - Project
-    put:
-      description: Update project by ID of authorized user.
-      parameters:
-      - description: project title
-        in: path
-        name: project_id
-        required: true
-        type: string
-      - description: project title
-        in: query
-        name: title
-        type: string
-      - description: project description
-        in: query
-        name: description
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 'response structure: {message:project}'
-          schema:
-            $ref: '#/definitions/models.Project'
-        "400":
-          description: 'response structure: {error:"error message"}'
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: Update projects by ID.
-      tags:
-      - Project
-  /api/register:
-    post:
-      description: Create a new user with the input name, email & password.
-      parameters:
-      - description: account name
-        in: query
-        name: name
-        required: true
-        type: string
-      - description: account email
-        in: query
-        name: username
-        required: true
-        type: string
-      - description: account password
-        in: query
-        name: password
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 'response structure: {message:"answer"}'
-          schema:
-            $ref: '#/definitions/models.Account'
-        "400":
-          description: 'response structure: {error:"error message"}'
-          schema:
-            type: string
-      summary: Registration user of contact service
-      tags:
-      - Account
-  /api/restore_password:
-    get:
-      description: Returned html page for setting new password
-      produces:
-      - text/html
-      responses:
-        "200": {}
-        "500":
-          description: 'response structure: {error:"error message"}'
-          schema:
-            type: string
-      summary: Restore password
-      tags:
-      - Account
-  /api/token:
-    get:
-      description: Generate Token for access to ragger
-      parameters:
-      - description: last generated refresh_token
-        in: query
-        name: refresh_token
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 'response structure: {message:"access_token:access, refresh_token:refresh"}'
-          schema:
-            $ref: '#/definitions/string'
-        "401":
-          description: 'response structure: {error:"error message"}'
-          schema:
-            type: string
-      summary: Generate Token in ragger
-      tags:
-      - Token
 securityDefinitions:
   ApiKeyAuth:
     in: header

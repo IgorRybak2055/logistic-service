@@ -8,6 +8,11 @@ import (
 	"github.com/IgorRybak2055/logistic-service/pkg/email"
 )
 
+// Company represents possible actions with a company.
+type Company interface {
+	Create(ctx context.Context, account models.Company) (models.Company, error)
+}
+
 // Token represents possible actions with a token.
 type Token interface {
 	GenerateToken(ctx context.Context, refreshToken string) (map[string]string, error)

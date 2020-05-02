@@ -6,14 +6,14 @@ import (
 
 	"github.com/heetch/confita"
 
-	"github.com/IgorRybak2055/logistic-service/internal/ragger"
+	"github.com/IgorRybak2055/logistic-service/internal/logistic"
 	"github.com/IgorRybak2055/logistic-service/internal/storage"
 	"github.com/IgorRybak2055/logistic-service/pkg/email"
 )
 
 // Config stores configs for ragger
 type Config struct {
-	HTTP *ragger.HTTPConfig
+	HTTP *logistic.HTTPConfig
 	DB   *storage.Config
 	Mail *email.Config
 }
@@ -21,7 +21,7 @@ type Config struct {
 // NewConfig returns Config with values from environment variables
 func NewConfig(ctx context.Context) (*Config, error) {
 	var cfg = &Config{
-		HTTP: &ragger.HTTPConfig{},
+		HTTP: &logistic.HTTPConfig{},
 		DB:   &storage.Config{},
 		Mail: &email.Config{},
 	}

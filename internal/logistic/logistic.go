@@ -40,6 +40,7 @@ type App struct {
 	Srv    *http.Server
 	DBC    *sqlx.DB
 
+	companyService   services.Company
 	accountService services.Account
 	projectService services.Project
 	topicService   services.Topic
@@ -60,6 +61,7 @@ func New(cfg *HTTPConfig, sendToEmailCg chan email.MessageData) *App {
 func (a *App) Start() error {
 	projectRepo := repository.NewProjectRepository(a.DBC)
 
+	a.companyService = services.NewCompanyService(repository.NewCompanyRepository(a.DBC), a.Logger)
 	a.accountService = services.NewAccountService(repository.NewAccountRepository(a.DBC), a.Logger)
 	a.projectService = services.NewProjectService(projectRepo, a.Logger)
 	a.topicService = services.NewTopicService(repository.NewTopicRepository(a.DBC), projectRepo, a.Logger)
@@ -69,15 +71,15 @@ func (a *App) Start() error {
 	router.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets/"))))
 
 	router.Handle("/health", handle(a.handleHealth)).Methods(http.MethodGet)
-	router.HandleFunc("/api/register", handle(a.handleRegister)).Methods(http.MethodPost)
-	router.HandleFunc("/api/login", handle(a.handleLogin)).Methods(http.MethodPost)
-	router.HandleFunc("/api/token", handle(a.handleGenerateToken)).Methods(http.MethodGet)
-	router.HandleFunc("/api/restore_password", handle(a.handleRestorePassword))
+	router.HandleFunc("/api/company/register", handle(a.handleCompanyRegister)).Methods(http.MethodPost)
+	// router.HandleFunc("/api/login", handle(a.handleLogin)).Methods(http.MethodPost)
+	// router.HandleFunc("/api/token", handle(a.handleGenerateToken)).Methods(http.MethodGet)
+	// router.HandleFunc("/api/restore_password", handle(a.handleRestorePassword))
 
 	api := router.PathPrefix("/api").Subrouter()
 
 	api.Use(JwtAuthentication)
-	api.HandleFunc("/new_password", handle(a.handleNewPassword)).Methods(http.MethodPost)
+	// api.HandleFunc("/new_password", handle(a.handleNewPassword)).Methods(http.MethodPost)
 
 	// // actions with projects
 	// api.HandleFunc("/projects", handle(a.handleGetAllProject)).Methods(http.MethodGet)

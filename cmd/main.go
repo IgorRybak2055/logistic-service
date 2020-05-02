@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/sirupsen/logrus"
 
@@ -35,7 +36,7 @@ func main() {
 	log := logrus.New()
 	log.SetFormatter(&logrus.JSONFormatter{})
 
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	cfg, err := config.NewConfig(ctx)
@@ -60,10 +61,10 @@ func main() {
 		app.DBC = conn
 		log.Info("database connection established")
 
-		<-ctx.Done()
-		if err := conn.Close(); err != nil {
-			log.Error(err)
-		}
+		// <-ctx.Done()
+		// if err := conn.Close(); err != nil {
+		// 	log.Error(err)
+		// }
 		return nil
 	})
 
