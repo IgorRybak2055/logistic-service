@@ -72,9 +72,10 @@ func (a *App) Start() error {
 
 	router.Handle("/health", handle(a.handleHealth)).Methods(http.MethodGet)
 	router.HandleFunc("/api/company/register", handle(a.handleCompanyRegister)).Methods(http.MethodPost)
-	// router.HandleFunc("/api/login", handle(a.handleLogin)).Methods(http.MethodPost)
-	// router.HandleFunc("/api/token", handle(a.handleGenerateToken)).Methods(http.MethodGet)
-	// router.HandleFunc("/api/restore_password", handle(a.handleRestorePassword))
+	router.HandleFunc("/api/register", handle(a.handleRegister)).Methods(http.MethodPost)
+	router.HandleFunc("/api/login", handle(a.handleLogin)).Methods(http.MethodPost)
+	router.HandleFunc("/api/token", handle(a.handleGenerateToken)).Methods(http.MethodGet)
+	router.HandleFunc("/api/restore_password", handle(a.handleRestorePassword))
 
 	api := router.PathPrefix("/api").Subrouter()
 

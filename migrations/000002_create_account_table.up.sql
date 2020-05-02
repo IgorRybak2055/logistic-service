@@ -5,7 +5,6 @@ CREATE TABLE IF NOT EXISTS account
     email      TEXT      NOT NULL UNIQUE,
     password   TEXT      NOT NULL,
     phone      TEXT,
-    skype      TEXT,
     company_id integer,
     created_at TIMESTAMP default now() NOT NULL,
     updated_at TIMESTAMP default now() NOT NULL,

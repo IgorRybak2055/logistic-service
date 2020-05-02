@@ -57,6 +57,230 @@
                 }
             }
         },
+        "/api/login": {
+            "post": {
+                "description": "Login in ragger with email and password",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Login in ragger",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "account email",
+                        "name": "email",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "account password len(password) \u003e 6",
+                        "name": "password",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "response structure: {message:\"answer\"}",
+                        "schema": {
+                            "$ref": "#/definitions/models.Account"
+                        }
+                    },
+                    "400": {
+                        "description": "response structure: {error:\"error message\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/new_password": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Setting new password for account",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Set new password",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "new password for account",
+                        "name": "password",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "confirm_password new password",
+                        "name": "confirm_password",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {},
+                    "400": {
+                        "description": "response structure: {error:\"error message\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/projects": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Creating new project with title and description.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Creating new project.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "project title",
+                        "name": "title",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "project description",
+                        "name": "description",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "response structure: {message:project}",
+                        "schema": {
+                            "$ref": "#/definitions/models.Project"
+                        }
+                    },
+                    "400": {
+                        "description": "response structure: {error:\"error message\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/register": {
+            "post": {
+                "description": "Create a new user with the input name, email \u0026 password.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Registration user of contact service",
+                "parameters": [
+                    {
+                        "description": "account",
+                        "name": "account",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Account"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "response structure: {message:\"answer\"}",
+                        "schema": {
+                            "$ref": "#/definitions/models.Account"
+                        }
+                    },
+                    "400": {
+                        "description": "response structure: {error:\"error message\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/restore_password": {
+            "get": {
+                "description": "Returned html page for setting new password",
+                "produces": [
+                    "text/html"
+                ],
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Restore password",
+                "responses": {
+                    "200": {},
+                    "500": {
+                        "description": "response structure: {error:\"error message\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/token": {
+            "get": {
+                "description": "Generate Token for access to ragger",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Token"
+                ],
+                "summary": "Generate Token in ragger",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "last generated refresh_token",
+                        "name": "refresh_token",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "response structure: {message:\"access_token:access, refresh_token:refresh\"}",
+                        "schema": {
+                            "$ref": "#/definitions/string"
+                        }
+                    },
+                    "401": {
+                        "description": "response structure: {error:\"error message\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/health": {
             "get": {
                 "description": "Health check ragger service",
@@ -79,6 +303,9 @@
         "models.Account": {
             "type": "object",
             "properties": {
+                "company_id": {
+                    "type": "integer"
+                },
                 "createdAt": {
                     "type": "string"
                 },
@@ -92,6 +319,9 @@
                     "type": "string"
                 },
                 "password": {
+                    "type": "string"
+                },
+                "phone": {
                     "type": "string"
                 },
                 "tokens": {
@@ -111,9 +341,6 @@
                 "bank_detail": {
                     "type": "string"
                 },
-                "createdAt": {
-                    "type": "string"
-                },
                 "email": {
                     "type": "string"
                 },
@@ -128,9 +355,29 @@
                 },
                 "phone": {
                     "type": "string"
+                }
+            }
+        },
+        "models.Project": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
                 },
                 "updatedAt": {
                     "type": "string"
+                },
+                "userID": {
+                    "type": "integer"
                 }
             }
         }

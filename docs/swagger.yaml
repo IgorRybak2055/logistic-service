@@ -2,6 +2,8 @@ basePath: /
 definitions:
   models.Account:
     properties:
+      company_id:
+        type: integer
       createdAt:
         type: string
       email:
@@ -11,6 +13,8 @@ definitions:
       name:
         type: string
       password:
+        type: string
+      phone:
         type: string
       tokens:
         additionalProperties:
@@ -23,8 +27,6 @@ definitions:
     properties:
       bank_detail:
         type: string
-      createdAt:
-        type: string
       email:
         type: string
       id:
@@ -35,8 +37,21 @@ definitions:
         type: string
       phone:
         type: string
+    type: object
+  models.Project:
+    properties:
+      createdAt:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
       updatedAt:
         type: string
+      userID:
+        type: integer
     type: object
 host: localhost:8100
 info:
@@ -77,6 +92,152 @@ paths:
       summary: Registration company of logistic-service service
       tags:
       - Company
+  /api/login:
+    post:
+      description: Login in ragger with email and password
+      parameters:
+      - description: account email
+        in: query
+        name: email
+        required: true
+        type: string
+      - description: account password len(password) > 6
+        in: query
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'response structure: {message:"answer"}'
+          schema:
+            $ref: '#/definitions/models.Account'
+        "400":
+          description: 'response structure: {error:"error message"}'
+          schema:
+            type: string
+      summary: Login in ragger
+      tags:
+      - Account
+  /api/new_password:
+    post:
+      description: Setting new password for account
+      parameters:
+      - description: new password for account
+        in: query
+        name: password
+        required: true
+        type: string
+      - description: confirm_password new password
+        in: query
+        name: confirm_password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200": {}
+        "400":
+          description: 'response structure: {error:"error message"}'
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Set new password
+      tags:
+      - Account
+  /api/projects:
+    post:
+      description: Creating new project with title and description.
+      parameters:
+      - description: project title
+        in: query
+        name: title
+        required: true
+        type: string
+      - description: project description
+        in: query
+        name: description
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: 'response structure: {message:project}'
+          schema:
+            $ref: '#/definitions/models.Project'
+        "400":
+          description: 'response structure: {error:"error message"}'
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Creating new project.
+      tags:
+      - Project
+  /api/register:
+    post:
+      description: Create a new user with the input name, email & password.
+      parameters:
+      - description: account
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/models.Account'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'response structure: {message:"answer"}'
+          schema:
+            $ref: '#/definitions/models.Account'
+        "400":
+          description: 'response structure: {error:"error message"}'
+          schema:
+            type: string
+      summary: Registration user of contact service
+      tags:
+      - Account
+  /api/restore_password:
+    get:
+      description: Returned html page for setting new password
+      produces:
+      - text/html
+      responses:
+        "200": {}
+        "500":
+          description: 'response structure: {error:"error message"}'
+          schema:
+            type: string
+      summary: Restore password
+      tags:
+      - Account
+  /api/token:
+    get:
+      description: Generate Token for access to ragger
+      parameters:
+      - description: last generated refresh_token
+        in: query
+        name: refresh_token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'response structure: {message:"access_token:access, refresh_token:refresh"}'
+          schema:
+            $ref: '#/definitions/string'
+        "401":
+          description: 'response structure: {error:"error message"}'
+          schema:
+            type: string
+      summary: Generate Token in ragger
+      tags:
+      - Token
   /health:
     get:
       description: Health check ragger service

@@ -27,6 +27,8 @@ func (a account) CreateAccount(ctx context.Context, account models.Account) (mod
                         NAME,
                         email,
                         password,
+						phone,
+						company_id,
                         created_at,
                         updated_at
             )
@@ -34,6 +36,8 @@ func (a account) CreateAccount(ctx context.Context, account models.Account) (mod
                         :name,
                         :email,
                         :password,
+						:phone,
+						:company_id,
                         :created_at,
                         :updated_at
             )
