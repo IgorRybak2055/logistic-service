@@ -27,6 +27,15 @@ type Account interface {
 	Token
 }
 
+// Delivery represents possible actions with a deliveries.
+type Delivery interface {
+	CreateDelivery(ctx context.Context, delivery models.Delivery) (models.Delivery, error)
+	// GetUserProjects(ctx context.Context, userID int64) ([]models.Project, error)
+	// GetProject(ctx context.Context, userID int64, projectID string) (models.Project, error)
+	// DeleteProject(ctx context.Context, userID int64, projectID string) error
+	// UpdateProject(ctx context.Context, userID int64, projectID string, upds map[string]interface{}) (models.Project, error)
+}
+
 // Project represents possible actions with a project.
 type Project interface {
 	NewProject(ctx context.Context, project models.Project) (models.Project, error)

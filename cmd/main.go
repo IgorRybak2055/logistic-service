@@ -19,13 +19,13 @@ import (
 	"github.com/IgorRybak2055/logistic-service/pkg/services"
 )
 
-// @title Ragger API
+// @title Logistic API
 // @version 1.0
 // @description This is a sample service ...
 // @termsOfService http://swagger.io/terms/
 // @contact.name API Support
-// @contact.email support@ragger.com
-// @host localhost:8100
+// @contact.email support@logistic.com
+// @host localhost:8888
 // @BasePath /
 // @securityDefinitions.apikey ApiKeyAuth
 // @in header
@@ -49,7 +49,6 @@ func main() {
 
 	app := logistic.New(cfg.HTTP, sendToEmailCh)
 
-	// TODO: we don't need somethi
 	srvs := services.NewServices(log)
 
 	srvs.Run(10, 10, func() error {

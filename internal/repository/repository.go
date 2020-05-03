@@ -19,6 +19,10 @@ type Company interface {
 	Create(ctx context.Context, company models.Company) (models.Company, error)
 }
 
+type Delivery interface {
+	Create(ctx context.Context, delivery models.Delivery) (models.Delivery, error)
+}
+
 // Account represents possible database actions with an account.
 type Account interface {
 	CreateAccount(ctx context.Context, account models.Account) (models.Account, error)

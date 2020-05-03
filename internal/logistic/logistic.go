@@ -40,8 +40,10 @@ type App struct {
 	Srv    *http.Server
 	DBC    *sqlx.DB
 
-	companyService   services.Company
-	accountService services.Account
+	companyService  services.Company
+	accountService  services.Account
+	deliveryService services.Delivery
+
 	projectService services.Project
 	topicService   services.Topic
 
@@ -63,6 +65,8 @@ func (a *App) Start() error {
 
 	a.companyService = services.NewCompanyService(repository.NewCompanyRepository(a.DBC), a.Logger)
 	a.accountService = services.NewAccountService(repository.NewAccountRepository(a.DBC), a.Logger)
+	a.deliveryService = services.NewDeliveryService(repository.NewDeliveryRepository(a.DBC), a.Logger)
+
 	a.projectService = services.NewProjectService(projectRepo, a.Logger)
 	a.topicService = services.NewTopicService(repository.NewTopicRepository(a.DBC), projectRepo, a.Logger)
 
@@ -80,7 +84,10 @@ func (a *App) Start() error {
 	api := router.PathPrefix("/api").Subrouter()
 
 	api.Use(JwtAuthentication)
-	// api.HandleFunc("/new_password", handle(a.handleNewPassword)).Methods(http.MethodPost)
+	api.HandleFunc("/new_password", handle(a.handleNewPassword)).Methods(http.MethodPost)
+
+	// action with delivery
+	api.HandleFunc("/deliveries", handle(a.handleCreateDelivery)).Methods(http.MethodPost)
 
 	// // actions with projects
 	// api.HandleFunc("/projects", handle(a.handleGetAllProject)).Methods(http.MethodGet)

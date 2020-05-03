@@ -1,5 +1,5 @@
 export HTTP_HOST := localhost
-export HTTP_ADDR := :8100
+export HTTP_ADDR := :8888
 export LOG_LEVEL := debug
 
 export LOCAL_DEBUG := false

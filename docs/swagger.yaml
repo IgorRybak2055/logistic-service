@@ -38,30 +38,36 @@ definitions:
       phone:
         type: string
     type: object
-  models.Project:
+  models.Delivery:
     properties:
-      createdAt:
-        type: string
-      description:
+      cargo:
         type: string
       id:
         type: integer
-      title:
+      price:
+        type: number
+      shipment_date:
         type: string
-      updatedAt:
+      shipment_place:
         type: string
-      userID:
-        type: integer
+      trailer_type:
+        type: string
+      unloading_place:
+        type: string
+      volume_cargo:
+        type: number
+      weight_cargo:
+        type: number
     type: object
-host: localhost:8100
+host: localhost:8888
 info:
   contact:
-    email: support@ragger.com
+    email: support@logistic.com
     name: API Support
   description: This is a sample service ...
   license: {}
   termsOfService: http://swagger.io/terms/
-  title: Ragger API
+  title: Logistic API
   version: "1.0"
 paths:
   /api/company/register:
@@ -92,6 +98,32 @@ paths:
       summary: Registration company of logistic-service service
       tags:
       - Company
+  /api/deliveries:
+    post:
+      description: Creating new delivery.
+      parameters:
+      - description: delivery
+        in: body
+        name: delivery
+        required: true
+        schema:
+          $ref: '#/definitions/models.Delivery'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: 'response structure: {message:delivery}'
+          schema:
+            $ref: '#/definitions/models.Delivery'
+        "400":
+          description: 'response structure: {error:"error message"}'
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Creating new delivery.
+      tags:
+      - Delivery
   /api/login:
     post:
       description: Login in ragger with email and password
@@ -147,36 +179,6 @@ paths:
       summary: Set new password
       tags:
       - Account
-  /api/projects:
-    post:
-      description: Creating new project with title and description.
-      parameters:
-      - description: project title
-        in: query
-        name: title
-        required: true
-        type: string
-      - description: project description
-        in: query
-        name: description
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: 'response structure: {message:project}'
-          schema:
-            $ref: '#/definitions/models.Project'
-        "400":
-          description: 'response structure: {error:"error message"}'
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: Creating new project.
-      tags:
-      - Project
   /api/register:
     post:
       description: Create a new user with the input name, email & password.

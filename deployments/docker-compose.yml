@@ -21,7 +21,7 @@ services:
 #    depends_on:
 #      - postgres
 #    ports:
-#      - 8100:8100
+#      - 8888:8888
 
 volumes:
   database-data:

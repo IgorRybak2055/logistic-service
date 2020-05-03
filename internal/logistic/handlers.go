@@ -75,7 +75,7 @@ func (a *App) handleRegister(w http.ResponseWriter, r *http.Request) error {
 	var newAccount models.Account
 
 	if err := json.NewDecoder(r.Body).Decode(&newAccount); err != nil {
-		a.Logger.Errorf("failed to decode account: ", err)
+		a.Logger.Errorf("failed to decode account: %s", err)
 		return err
 	}
 
@@ -90,7 +90,6 @@ func (a *App) handleRegister(w http.ResponseWriter, r *http.Request) error {
 
 	return nil
 }
-
 
 // Set new password godoc
 // @Summary Set new password
@@ -124,7 +123,6 @@ func (a *App) handleNewPassword(w http.ResponseWriter, r *http.Request) error {
 
 	return nil
 }
-
 
 // Login godoc
 // @Summary Login in ragger
@@ -215,29 +213,30 @@ func (a *App) handleRestorePassword(w http.ResponseWriter, r *http.Request) erro
 	return nil
 }
 
-func contextUserID(ctx context.Context) int64 { return ctx.Value("user").(int64) }
+func contextAccountID(ctx context.Context) int64 { return ctx.Value("user").(int64) }
 
-// New project godoc
-// @Summary Creating new project.
-// @Description  Creating new project with title and description.
-// @Tags Project
-// @Produce  json
-// @Param title query string true "project title"
-// @Param description query string true "project description"
-// @Success 201 {object} models.Project "response structure: {message:project}"
+// New delivery godoc
+// @Summary Creating new delivery.
+// @Description Creating new delivery.
+// @Tags Delivery
+// @Produce json
+// @Param delivery body models.Delivery true "delivery"
+// @Success 201 {object} models.Delivery "response structure: {message:delivery}"
 // @Failure 400 {string} string "response structure: {error:"error message"}"
-// @Router /api/projects [post]
+// @Router /api/deliveries [post]
 // @Security ApiKeyAuth
-func (a *App) handleNewProject(w http.ResponseWriter, r *http.Request) error {
-	var ctx = r.Context()
+func (a *App) handleCreateDelivery(w http.ResponseWriter, r *http.Request) error {
+	var (
+		ctx      = r.Context()
+		delivery models.Delivery
+	)
 
-	var newProject = models.Project{
-		Title:       r.FormValue("title"),
-		Description: r.FormValue("description"),
-		UserID:      contextUserID(ctx),
+	if err := json.NewDecoder(r.Body).Decode(&delivery); err != nil {
+		a.Logger.Errorf("failed to decode delivery: %s", err)
+		return err
 	}
 
-	var account, err = a.projectService.NewProject(ctx, newProject)
+	var account, err = a.deliveryService.CreateDelivery(ctx, delivery)
 	if err != nil {
 		return newError(http.StatusBadRequest, err)
 	}
