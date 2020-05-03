@@ -93,7 +93,7 @@ func (s accountService) Login(ctx context.Context, email, password string) (mode
 		return models.Account{}, errors.Wrap(err, "comparing passwords")
 	}
 
-	tokens, err := generateTokenPair(account.ID, account.UpdatedAt)
+	tokens, err := generateTokenPair(account.ID, account.CompanyId, account.UpdatedAt)
 	if err != nil {
 		s.log.Debugf("login: failed to generate token: %s", err)
 
@@ -166,7 +166,7 @@ func (s accountService) GenerateToken(ctx context.Context, refreshToken string) 
 		return nil, errors.New("invalid refresh token")
 	}
 
-	newTokenPair, err := generateTokenPair(account.ID, account.UpdatedAt)
+	newTokenPair, err := generateTokenPair(account.ID, account.CompanyId, account.UpdatedAt)
 	if err != nil {
 		s.log.Debugf("generate token: failed to generate news tokens: %s", err)
 
@@ -176,13 +176,14 @@ func (s accountService) GenerateToken(ctx context.Context, refreshToken string) 
 	return newTokenPair, nil
 }
 
-func generateTokenPair(accountID int64, accountUpdateTime time.Time) (map[string]string, error) {
+func generateTokenPair(accountID, companyID int64, accountUpdateTime time.Time) (map[string]string, error) {
 	var (
 		token  = jwt.New(jwt.SigningMethodHS256)
 		claims = token.Claims.(jwt.MapClaims)
 	)
 
 	claims["id"] = accountID
+	claims["company_id"] = companyID
 	claims["exp"] = time.Now().Add(time.Minute * 10).Unix()
 
 	var t, err = token.SignedString([]byte(os.Getenv("TOKEN_PASSWORD")))
@@ -228,7 +229,7 @@ func (s accountService) RestorePassword(ctx context.Context, ch chan email.Messa
 
 	s.log.Info("checked account: ", account)
 
-	tokens, err := generateTokenPair(account.ID, time.Now())
+	tokens, err := generateTokenPair(account.ID, account.CompanyId, time.Now())
 	if err != nil {
 		s.log.Debugf("CheckAccountByEmail: failed to generate news tokens: %s", err)
 

@@ -42,6 +42,8 @@ definitions:
     properties:
       cargo:
         type: string
+      company_id:
+        type: integer
       id:
         type: integer
       price:

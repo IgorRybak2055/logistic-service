@@ -12,6 +12,7 @@ import (
 // Token (JWT) claims struct.
 type Token struct {
 	UserID int64 `json:"id"`
+	CompanyID int64 `json:"company_id"`
 	jwt.StandardClaims
 }
 

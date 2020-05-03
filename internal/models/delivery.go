@@ -2,7 +2,6 @@ package models
 
 import (
 	"encoding/json"
-	"log"
 	"time"
 
 	"github.com/pkg/errors"
@@ -10,6 +9,7 @@ import (
 
 type Delivery struct {
 	ID             int64     `db:"id" json:"id"`
+	CompanyID      int64     `db:"company_id" json:"company_id"`
 	ShipmentDate   time.Time `db:"shipment_date" json:"shipment_date"`
 	ShipmentPlace  string    `db:"shipment_place" json:"shipment_place"`
 	UnloadingPlace string    `db:"unloading_place" json:"unloading_place"`
@@ -26,8 +26,6 @@ type Delivery struct {
 func (d *Delivery) Validate() error {
 	switch {
 	case d.ShipmentDate.Before(time.Now()):
-		log.Println("DATE OTPRAVKI ---", d.ShipmentDate)
-
 		return errors.New("shipment date is required")
 	case d.ShipmentPlace == "":
 		return errors.New("shipment place is required")
@@ -53,6 +51,7 @@ func (d *Delivery) Validate() error {
 func (d *Delivery) UnmarshalJSON(data []byte) error {
 	type tmp struct {
 		ID             int64   `json:"id"`
+		CompanyID      int64   `json:"company_id"`
 		ShipmentDate   string  `json:"shipment_date"`
 		ShipmentPlace  string  `json:"shipment_place"`
 		UnloadingPlace string  `json:"unloading_place"`
@@ -76,6 +75,7 @@ func (d *Delivery) UnmarshalJSON(data []byte) error {
 
 	d.ShipmentDate = parseDate
 	d.ID = temp.ID
+	d.CompanyID = temp.CompanyID
 	d.ShipmentPlace = temp.ShipmentPlace
 	d.UnloadingPlace = temp.UnloadingPlace
 	d.Cargo = temp.Cargo

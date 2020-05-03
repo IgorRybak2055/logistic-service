@@ -14,6 +14,7 @@ create type trailer_type as enum
 CREATE TABLE IF NOT EXISTS delivery
 (
     id              SERIAL PRIMARY KEY,
+    company_id      integer,
     shipment_date   TIMESTAMP               NOT NULL,
     shipment_place  TEXT                    NOT NULL,
     unloading_place TEXT                    NOT NULL,
@@ -23,5 +24,8 @@ CREATE TABLE IF NOT EXISTS delivery
     trailer_type    trailer_type,
     price           float4                  NOT NULL,
     created_at      TIMESTAMP DEFAULT now() NOT NULL,
-    updated_at      TIMESTAMP DEFAULT now() NOT NULL
+    updated_at      TIMESTAMP DEFAULT now() NOT NULL,
+
+    FOREIGN KEY (company_id) REFERENCES company (id)
+        ON UPDATE CASCADE ON DELETE CASCADE
 );

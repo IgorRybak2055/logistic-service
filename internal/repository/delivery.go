@@ -23,6 +23,7 @@ func NewDeliveryRepository(dbc *sqlx.DB) Delivery {
 func (d delivery) Create(ctx context.Context, delivery models.Delivery) (models.Delivery, error) {
 	var query = ` INSERT INTO delivery
             (
+						company_id,
                         shipment_date,
                         shipment_place,
                         unloading_place,
@@ -34,6 +35,7 @@ func (d delivery) Create(ctx context.Context, delivery models.Delivery) (models.
             )
             VALUES
             (
+						:company_id,
                         :shipment_date,
                         :shipment_place,
                         :unloading_place,
@@ -47,7 +49,7 @@ func (d delivery) Create(ctx context.Context, delivery models.Delivery) (models.
 
 	rows, err := sqlx.NamedQueryContext(ctx, d.dbc, query, delivery)
 	if err != nil {
-		return models.Delivery{}, errors.Wrap(err, "creating delivery")
+		return models.Delivery{}, errors.Wrap(err, "executing query")
 	}
 
 	defer func() {
