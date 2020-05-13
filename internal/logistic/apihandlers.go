@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
 
 	"github.com/IgorRybak2055/logistic-service/internal/models"
@@ -135,19 +136,20 @@ func (a *App) handleNewPassword(w http.ResponseWriter, r *http.Request) error {
 // @Failure 400 {string} string "response structure: {error:"error message"}"
 // @Router /api/login [post]
 func (a *App) handleLogin(w http.ResponseWriter, r *http.Request) error {
-	var (
-		email    = r.FormValue("email")
-		password = r.FormValue("password")
-	)
+	var user models.Account
 
-	var account, err = a.accountService.Login(r.Context(), email, password)
+	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		return newError(http.StatusInternalServerError, err)
+	}
+
+	var account, err = a.accountService.Login(r.Context(), user.Email, user.Password)
 	if err != nil {
 		a.Logger.Warn("login:", err)
 
 		return newError(http.StatusBadRequest, err)
 	}
 
-	Respond(w, http.StatusOK, Message(account))
+	Respond(w, http.StatusOK, account)
 
 	return nil
 }
@@ -215,6 +217,8 @@ func (a *App) handleRestorePassword(w http.ResponseWriter, r *http.Request) erro
 
 func contextAccountID(ctx context.Context) int64 { return ctx.Value("user").(int64) }
 
+func contextCompanyID(ctx context.Context) int64 { return ctx.Value("company").(int64) }
+
 // New delivery godoc
 // @Summary Creating new delivery.
 // @Description Creating new delivery.
@@ -236,6 +240,8 @@ func (a *App) handleCreateDelivery(w http.ResponseWriter, r *http.Request) error
 		return err
 	}
 
+	delivery.CompanyID = contextCompanyID(ctx)
+
 	var account, err = a.deliveryService.CreateDelivery(ctx, delivery)
 	if err != nil {
 		return newError(http.StatusBadRequest, err)
@@ -246,28 +252,171 @@ func (a *App) handleCreateDelivery(w http.ResponseWriter, r *http.Request) error
 	return nil
 }
 
-// // Get all project godoc
-// // @Summary Get all projects of user.
-// // @Description Get all projects of authorized user.
-// // @Tags Project
-// // @Produce json
-// // @Success 200 {array} models.Project "response structure: {message:[]project}"
-// // @Failure 400 {string} string "response structure: {error:"error message"}"
-// // @Router /api/projects [get]
-// // @Security ApiKeyAuth
-// func (a *App) handleGetAllProject(w http.ResponseWriter, r *http.Request) error {
-// 	ctx := r.Context()
-// 	userID := contextUserID(ctx)
-//
-// 	usersProjects, err := a.projectService.GetUserProjects(ctx, userID)
-// 	if err != nil {
-// 		return newError(http.StatusInternalServerError, err)
-// 	}
-//
-// 	Respond(w, http.StatusOK, Message(usersProjects))
-//
-// 	return nil
-// }
+// Get all deliveries godoc
+// @Summary Get all deliveries of company.
+// @Description Get all deliveries of company.
+// @Tags Delivery
+// @Produce json
+// @Success 200 {array} models.Delivery "response []Delivery"
+// @Failure 400 {string} string "response structure: {error:"error message"}"
+// @Router /api/deliveries [get]
+// @Security ApiKeyAuth
+func (a *App) handleAllDeliveries(w http.ResponseWriter, r *http.Request) error {
+	ctx := r.Context()
+	// companyID := contextCompanyID(ctx)
+
+	dlvs, err := a.deliveryService.Deliveries(ctx)
+	if err != nil {
+		return newError(http.StatusInternalServerError, err)
+	}
+
+	Respond(w, http.StatusOK, dlvs)
+
+	return nil
+}
+
+// Get all deliveries godoc
+// @Summary Get all deliveries of company.
+// @Description Get all deliveries of company.
+// @Tags Delivery
+// @Produce json
+// @Success 200 {array} models.Delivery "response []Delivery"
+// @Failure 400 {string} string "response structure: {error:"error message"}"
+// @Router /api/deliveries [get]
+// @Security ApiKeyAuth
+func (a *App) handleInterestingDeliveries(w http.ResponseWriter, r *http.Request) error {
+	ctx := r.Context()
+	companyID := contextCompanyID(ctx)
+
+	dlvs, err := a.deliveryService.InterestingDeliveries(ctx, companyID)
+	if err != nil {
+		return newError(http.StatusInternalServerError, err)
+	}
+
+	Respond(w, http.StatusOK, dlvs)
+
+	return nil
+}
+
+// Get project godoc
+// @Summary Get projects by ID.
+// @Description Get project of authorized user by ID.
+// @Tags Project
+// @Produce json
+// @Param project_id path string true "project id"
+// @Success 200 {object} models.Project "response structure: {message:project}"
+// @Failure 400 {string} string "response structure: {error:"error message"}"
+// @Router /api/projects/{project_id} [get]
+// @Security ApiKeyAuth
+func (a *App) handleDelivery(w http.ResponseWriter, r *http.Request) error {
+	var (
+		vars      = mux.Vars(r)
+		delivery string
+		ok        bool
+		ctx       = r.Context()
+	)
+
+	if delivery, ok = vars["delivery_id"]; !ok {
+		return newError(http.StatusBadRequest, errors.New("delivery not specified"))
+	}
+
+	project, err := a.deliveryService.Delivery(ctx, delivery)
+	if err != nil {
+		return newError(http.StatusInternalServerError, err)
+	}
+
+	Respond(w, http.StatusOK, project)
+
+	return nil
+}
+
+// Get all deliveries godoc
+// @Summary Get all deliveries of company.
+// @Description Get all deliveries of company.
+// @Tags Delivery
+// @Produce json
+// @Success 200 {array} models.Delivery "response []Delivery"
+// @Failure 400 {string} string "response structure: {error:"error message"}"
+// @Router /api/deliveries [get]
+// @Security ApiKeyAuth
+func (a *App) handleActiveDeliveries(w http.ResponseWriter, r *http.Request) error {
+	ctx := r.Context()
+	companyID := contextCompanyID(ctx)
+
+	dlvs, err := a.deliveryService.Deliveries(ctx)
+	if err != nil {
+		return newError(http.StatusInternalServerError, err)
+	}
+
+	var activeDlvs []models.Delivery
+
+
+	for _, d := range dlvs {
+		if d.Status == "тендер" && d.CompanyID == companyID{
+			activeDlvs = append(activeDlvs, d)
+		}
+	}
+
+	Respond(w, http.StatusOK, activeDlvs)
+
+	return nil
+}
+
+// New truck godoc
+// @Summary Creating new truck.
+// @Description Creating new truck.
+// @Tags Truck
+// @Produce json
+// @Param delivery body models.Truck true "delivery"
+// @Success 201 {object} models.Truck "response structure: {message:truck}"
+// @Failure 400 {string} string "response structure: {error:"error message"}"
+// @Router /api/trucks [post]
+// @Security ApiKeyAuth
+func (a *App) handleCreateTruck(w http.ResponseWriter, r *http.Request) error {
+	var (
+		ctx      = r.Context()
+		truck models.Truck
+	)
+
+	if err := json.NewDecoder(r.Body).Decode(&truck); err != nil {
+		a.Logger.Errorf("failed to decode truck: %s", err)
+		return err
+	}
+
+	truck.CompanyID = contextCompanyID(ctx)
+
+	var account, err = a.truckService.Create(ctx, truck)
+	if err != nil {
+		return newError(http.StatusBadRequest, err)
+	}
+
+	Respond(w, http.StatusCreated, Message(account))
+
+	return nil
+}
+
+// Get all trucks godoc
+// @Summary Get all trucks of company.
+// @Description Get all trucks of company.
+// @Tags Truck
+// @Produce json
+// @Success 200 {array} models.Truck "response structure: {message:[]truck}"
+// @Failure 400 {string} string "response structure: {error:"error message"}"
+// @Router /api/trucks [get]
+// @Security ApiKeyAuth
+func (a *App) handleAllTrucks(w http.ResponseWriter, r *http.Request) error {
+	ctx := r.Context()
+	companyID := contextCompanyID(ctx)
+
+	usersProjects, err := a.truckService.Trucks(ctx, companyID)
+	if err != nil {
+		return newError(http.StatusInternalServerError, err)
+	}
+
+	Respond(w, http.StatusOK, Message(usersProjects))
+
+	return nil
+}
 //
 // // Get project godoc
 // // @Summary Get projects by ID.

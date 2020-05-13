@@ -22,6 +22,6 @@ services:
 #      - postgres
 #    ports:
 #      - 8888:8888
-
-volumes:
-  database-data:
+#
+#volumes:
+#  database-data:

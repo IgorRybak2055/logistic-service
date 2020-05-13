@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS delivery
     volume_cargo    float4                  NOT NULL,
     trailer_type    trailer_type,
     price           float4                  NOT NULL,
+    status          text                    NOT NULL DEFAULT 'tender',
     created_at      TIMESTAMP DEFAULT now() NOT NULL,
     updated_at      TIMESTAMP DEFAULT now() NOT NULL,
 

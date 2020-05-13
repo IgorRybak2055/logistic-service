@@ -1,0 +1,257 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>АТП</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="/static/style.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body style="background-color: cadetblue">
+
+{{/* navbar*/}}
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #ccfff7;">
+    <a class="navbar-brand" href="/m/main">Главная</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+
+            <div class="mr-3">
+                <form method="get" action="/add_delivery">
+                    <button class="btn btn-info" type="submit"> Добавить груз </button>
+                </form>
+            </div>
+
+            <div class="mr-3">
+                <form method="get" action="/partners">
+                    <button class="btn btn-info" type="submit"> Мои партнеры </button>
+                </form>
+            </div>
+
+            <div class="mr-3">
+                <form method="GET" action="/report">
+                    <button class="btn btn-info" type="submit"> Отчет </button>
+                </form>
+            </div>
+
+{{/*            <div class="mr-3">*/}}
+{{/*                <form method="GET" action="/m/driver">*/}}
+{{/*                    <button class="btn btn-info" type="submit"> Водители </button>*/}}
+{{/*                </form>*/}}
+{{/*            </div>*/}}
+
+{{/*            <div class="mr-3">*/}}
+{{/*                <form method="GET" action="/m/truck">*/}}
+{{/*                    <button class="btn btn-info" type="submit"> Автопоезда </button>*/}}
+{{/*                </form>*/}}
+{{/*            </div>*/}}
+
+        </ul>
+
+        <div class="nav-item mr-4">
+            <form method="POST" action="/logout">
+                <button class="btn btn-primary" type="submit"> Выйти</button>
+            </form>
+        </div>
+
+    </div>
+</nav>
+
+{{/*end navbar*/}}
+
+{{/*Тут инфу о водителях выводить*/}}
+{{/*<div class="panel">*/}}
+{{/*    <form method="post" >*/}}
+{{/*        <h3 style="color: #1e90ff">Добаление рейса</h3>*/}}
+{{/*        <input type="text" name="truck_number" placeholder="Машина">*/}}
+{{/*        <input type="text" name="depart" placeholder="Откуда">*/}}
+{{/*        <input type="date" name="depart_date" placeholder="Дата загрузки">*/}}
+{{/*        <input type="text" name="arrival" placeholder="Куда">*/}}
+{{/*        <input type="date" name="arrival_date" placeholder="Дата выгрузки">*/}}
+{{/*        <input type="number" name="payment" placeholder="Оплата">*/}}
+{{/*        <button class="btn btn-outline-primary" type="submit">Добавить</button>*/}}
+{{/*    </form>*/}}
+{{/*</div>*/}}
+<div class ="container mt-5">
+
+<div class="row">
+
+    <div class="col-lg-3 new-col-lg-3">
+        <div class="product-item">
+            <h4><a class="text-in_block"> Добавить груз </a></h4>
+            <div class="add-to-card-btn">
+                <a href="/about#diagnostic" class="btn btn-danger text-font">
+                    Подробнее
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 new-col-lg-3">
+        <div class="product-item">
+            <h4><a class="text-in_block"> Мои партнеры </a></h4>
+            <div class="add-to-card-btn">
+                <a href="/about#repair" class="btn btn-danger text-font">
+                    Подробнее
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 new-col-lg-3">
+        <div class="product-item">
+            <h4><a class="text-in_block"> Получить отчет </a></h4>
+            <div class="add-to-card-btn">
+                <a href="/about#look" class="btn btn-danger text-font">
+                    Подробнее
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 new-col-lg-3">
+        <div class="product-item">
+            <h4><a class="text-in_block"> Активные тендеры </a></h4>
+            <div class="add-to-card-btn">
+                <a href="/active_tenders" class="btn btn-danger text-font">
+                    Подробнее
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div style="padding-top: 57px; margin-left: 15%; margin-right: 15%">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Дата</th>
+            <th scope="col">Путь</th>
+            <th scope="col">Груз</th>
+            <th scope="col">Вес</th>
+            <th scope="col">Прицеп</th>
+            <th scope="col">Цена</th>
+            <th scope="col">Статус</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .}}
+            <tr>
+                <td>{{.ShipmentDate}}</td>
+                <td> <a > {{.ShipmentPlace}} - {{.UnloadingPlace}} </a></td>
+                <td>{{.Cargo}}</td>
+                <td>{{.WeightCargo}}т , {{.VolumeCargo}}м3</td>
+                <td>{{.TrailerType}}</td>
+                <td>{{.Price}}</td>
+                <td>{{.Status}}</td>
+            </tr>
+        {{end}}
+        </tbody>
+    </table>
+</div>
+
+{{/*footer*/}}
+<!-- Footer -->
+<footer class="page-footer font-small footer-bg">
+
+    <!-- Footer Links -->
+    <div class="text-center text-md-left mt-5">
+
+        <!-- Grid row -->
+        <div class="row mt-3">
+
+            <!-- Grid column -->
+            <div class="col-lg-6">
+
+                <!-- Content -->
+                <script src='https://maps.googleapis.com/maps/api/js?v=3.exp'></script>
+                <div style='overflow:hidden;height:370px;width:660px;'>
+                    <div id='gmap_canvas' class="map-footer" style='height:350px;width:660px;'></div>
+                    <style>#gmap_canvas img {
+                            max-width: none !important;
+                            background: none !important
+                        }</style>
+                </div>
+                <script type='text/javascript'>function init_map() {
+                        var myOptions = {
+                            zoom: 17,
+                            center: new google.maps.LatLng(52.4529164, 30.99291560000006),
+                            mapTypeId: google.maps.MapTypeId.ROADMAP
+                        };
+                        map = new google.maps.Map(document.getElementById('gmap_canvas'), myOptions);
+                        marker = new google.maps.Marker({
+                            map: map,
+                            position: new google.maps.LatLng(52.4529164, 30.99291560000006)
+                        });
+                        infowindow = new google.maps.InfoWindow({content: '<strong>ИП Рыбак, Valtec</strong><br>Беларусь, Гомель, ул. Советская 134/2<br>'});
+                        google.maps.event.addListener(marker, 'click', function () {
+                            infowindow.open(map, marker);
+                        });
+                        infowindow.open(map, marker);
+                    }
+
+                    google.maps.event.addDomListener(window, 'load', init_map);</script>
+
+            </div>
+            <!-- Grid column -->
+
+            <!-- Grid column -->
+
+            <div class="col-lg-6 footer_contact text-left">
+                <p class="contact-name"><b>Рыбак И. Д.</b></p>
+                <p class="contact_adress"> индекс, Беларусь, г.Гомель, ул. Советская 134/2, цокольный этаж </p>
+                <p>
+
+                    <b>E-mail:</b>
+                    <b><a style="color:#e82d3c; display: inline;"
+                          href="mailto:Valtec_Gomel@gmail.com">stobykikiry@yandex.ru</a></b>
+                </p>
+                <a class="contact-number" href="tel:+375253185258" style="display:inline">
+                    <i class="sprite sprite-call"></i>
+                    +375 (29)
+                    <span class="red"> 321-54-54 </span>
+                    <span class="normal"> (МТС) </span>
+                </a>
+
+                <div class="text-left" style="margin-top: 25px">
+                    <button class="btn btn-danger btn-r">
+                        Форма связи
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Footer -->
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+{{/*end footer*/}}
+
+</body>
+</html>

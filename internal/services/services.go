@@ -10,7 +10,14 @@ import (
 
 // Company represents possible actions with a company.
 type Company interface {
-	Create(ctx context.Context, account models.Company) (models.Company, error)
+	Create(ctx context.Context, company models.Company) (models.Company, error)
+}
+
+// Truck represents possible actions with a truck.
+type Truck interface {
+	Create(ctx context.Context, truck models.Truck) (models.Truck, error)
+	Trucks(ctx context.Context, companyID int64) ([]models.Truck, error)
+
 }
 
 // Token represents possible actions with a token.
@@ -30,7 +37,9 @@ type Account interface {
 // Delivery represents possible actions with a deliveries.
 type Delivery interface {
 	CreateDelivery(ctx context.Context, delivery models.Delivery) (models.Delivery, error)
-	// GetUserProjects(ctx context.Context, userID int64) ([]models.Project, error)
+	Deliveries(ctx context.Context) ([]models.Delivery, error)
+	InterestingDeliveries(ctx context.Context, companyID int64) ([]models.Delivery, error)
+	Delivery(ctx context.Context, id string) (models.Delivery, error)
 	// GetProject(ctx context.Context, userID int64, projectID string) (models.Project, error)
 	// DeleteProject(ctx context.Context, userID int64, projectID string) error
 	// UpdateProject(ctx context.Context, userID int64, projectID string, upds map[string]interface{}) (models.Project, error)

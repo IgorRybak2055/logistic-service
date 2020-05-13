@@ -6,19 +6,12 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
-	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	httpSwagger "github.com/swaggo/http-swagger"
 
 	"github.com/IgorRybak2055/logistic-service/internal/repository"
 	"github.com/IgorRybak2055/logistic-service/internal/services"
 	"github.com/IgorRybak2055/logistic-service/pkg/email"
-)
-
-var (
-	errProjectNotSpecified = errors.New("project not specified in request")
-	errTopicNotSpecified   = errors.New("topic not specified in request")
-	errBadRequest          = errors.New("not enough data in request")
 )
 
 // HTTPConfig stores configs for ragger.
@@ -43,9 +36,7 @@ type App struct {
 	companyService  services.Company
 	accountService  services.Account
 	deliveryService services.Delivery
-
-	projectService services.Project
-	topicService   services.Topic
+	truckService    services.Truck
 
 	sendToEmailCh chan email.MessageData
 }
@@ -61,14 +52,14 @@ func New(cfg *HTTPConfig, sendToEmailCg chan email.MessageData) *App {
 
 // Start configures all needs App fields and start App
 func (a *App) Start() error {
-	projectRepo := repository.NewProjectRepository(a.DBC)
-
 	a.companyService = services.NewCompanyService(repository.NewCompanyRepository(a.DBC), a.Logger)
 	a.accountService = services.NewAccountService(repository.NewAccountRepository(a.DBC), a.Logger)
 	a.deliveryService = services.NewDeliveryService(repository.NewDeliveryRepository(a.DBC), a.Logger)
+	a.truckService = services.NewTruckService(repository.NewTruckRepository(a.DBC), a.Logger)
 
-	a.projectService = services.NewProjectService(projectRepo, a.Logger)
-	a.topicService = services.NewTopicService(repository.NewTopicRepository(a.DBC), projectRepo, a.Logger)
+	// projectRepo := repository.NewProjectRepository(a.DBC)
+	// a.projectService = services.NewProjectService(projectRepo, a.Logger)
+	// a.topicService = services.NewTopicService(repository.NewTopicRepository(a.DBC), projectRepo, a.Logger)
 
 	router := mux.NewRouter()
 
@@ -88,6 +79,15 @@ func (a *App) Start() error {
 
 	// action with delivery
 	api.HandleFunc("/deliveries", handle(a.handleCreateDelivery)).Methods(http.MethodPost)
+	api.HandleFunc("/deliveries", handle(a.handleAllDeliveries)).Methods(http.MethodGet)
+	api.HandleFunc("/deliveries/{delivery_id}", handle(a.handleDelivery)).Methods(http.MethodGet)
+	api.HandleFunc("/interesting_deliveries/", handle(a.handleInterestingDeliveries)).Methods(http.MethodGet)
+
+	api.HandleFunc("/active_tenders", handle(a.handleActiveDeliveries)).Methods(http.MethodGet)
+
+	// action with trucks
+	api.HandleFunc("/trucks", handle(a.handleCreateTruck)).Methods(http.MethodPost)
+	api.HandleFunc("/trucks", handle(a.handleAllTrucks)).Methods(http.MethodGet)
 
 	// // actions with projects
 	// api.HandleFunc("/projects", handle(a.handleGetAllProject)).Methods(http.MethodGet)
@@ -110,7 +110,7 @@ func (a *App) Start() error {
 		Addr:    a.cfg.Addr,
 	}
 
-	a.Logger.Info("starting api server...")
+	a.Logger.Infof("starting api server %s ...", a.cfg.Addr)
 
 	return a.Srv.ListenAndServe()
 }

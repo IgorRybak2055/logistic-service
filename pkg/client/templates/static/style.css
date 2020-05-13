@@ -1,0 +1,251 @@
+html, body{
+    height: 100%;
+    max-height: 100%;
+    max-width:100%;
+    background-color: whitesmoke;
+    /*background-image: url("img/main.jpg");*/
+    font: 13px/1.5 Verdana, Tahoma, Arial, sans-serif;
+}
+
+.top-container{
+    height: auto;
+    width: 1250px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0px;
+    border: none;
+    background-color: whitesmoke;
+}
+
+.smoke{
+    padding-right: 50%;
+}
+
+.smoke ul {
+
+    padding-top: 5%;
+    display: flex
+}
+.smoke ul li {
+    list-style: none;
+    color: #2f312f;
+    font-family: "Droid Serif", "DejaVu Serif", "STIX", serif;
+    font-size: 5em;
+    font-weight: bold;
+
+}
+.smoke ul:hover li {
+    animation: animate 2s linear forwards;
+}
+
+@keyframes animate {
+    0% {
+        transform: rotate(0deg) translateY(0px);
+        opacity:1;
+        filter: blur(1px);
+    }
+    100% {
+        transform: rotate(45deg) translateY(-200px);
+        opacity: 0;
+        filter: blur(20px);
+    }
+}
+
+
+.row{
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.container-fluid{
+    padding-left: 70px;
+    padding-right: 70px;
+}
+
+.navbar-brand{
+    border: none;
+    outline: none;
+}
+
+.navbar-collapse{
+    margin-top: 1%;
+    font-family: Verdana, Helvetica, Tahoma, Arial, sans-serif;
+    font-size: 16px;
+    color: black;
+}
+
+.navbar{
+    margin-bottom: 0px;
+    background-color: whitesmoke;
+}
+
+.navbar-default .navbar-nav>li>a{
+    color: black;
+    height: 70px;
+}
+
+
+/*.container_in{*/
+/*position: relative;*/
+/*width: 80%;*/
+/*height: 80%;*/
+/*margin: auto;*/
+/*background-color: #edeef0;*/
+/*}*/
+
+.container {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    width: 90%;
+}
+
+.nonpad{
+    padding: 1px;
+}
+
+.container-info{
+    background-color: white;
+    width: 80%;
+    padding: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 50px;
+}
+
+/*.container-about{*/
+/*padding:50px;*/
+/*}*/
+
+.text-info{
+    margin-top: 150px;
+    margin-left:60px;
+    margin-right: 60px;
+    font-family: "Droid Serif", "DejaVu Serif", "STIX", serif;
+    font-size: 30px;
+    color: lightgrey;
+}
+
+.section{
+    margin-top: 2%;
+    margin-bottom: 3%;
+}
+
+.new-col-lg-3{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.col-lg-6{
+    padding: 0;
+}
+
+.product-item{
+    /*height: 300px;*/
+    background-color: white;
+    border: 10px solid darkred;
+    position: relative;
+    padding-bottom: 15px;
+    padding-top: 10px;
+    text-align: center;
+}
+
+.text-in_block{
+    color: black;
+    margin: 10px;
+    font-family: "Bitstream Vera Sans Mono", Monaco, "Courier New", Courier, monospace;
+    font-size: 18px;
+}
+
+.text-about{
+    font-family: Georgia;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+.img_in_about{
+    text-align: center;
+}
+
+.display-1{
+    color:black;
+    font-family: "Franklin Gothic Medium";
+    padding: 20px;
+}
+
+.img-resp{
+    left:55px;
+    height: 200px;
+}
+
+hr{
+    /*border: none; !* Убираем границу *!*/
+    background-color: red; /* Цвет линии */
+    color: red; /* Цвет линии для IE6-7 */
+    height: 5px; /* Толщина линии */
+    width:95%;
+}
+
+.form-btn{
+    margin: auto;
+}
+
+.contact-text{
+    padding-top:3%;
+    font-size: 16px;
+}
+
+.footer_contact {
+    padding-left: 10% ;
+    padding-top: 5%;
+    font-size: 16px;
+}
+
+.contact-name {
+    color: black;
+    font-family: "ProximaNovaBold";
+    font-size: 20px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.contact_adress {
+    color: #8a8a8a;
+    font-family: "ProximaNovaRg";
+    font-size: 16px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.contact-number {
+    color: black;
+    font-weight: bold;
+}
+
+.sprite-call {
+    width: 25px;
+    height: 25px;
+    float: left;
+    margin-top: 0;
+    margin-right: 5px;
+}
+
+.normal {
+    color: #8a8a8a;
+    font-family: "ProximaNovaRg";
+}
+
+.red {
+    color: #e82d3c;
+    font-weight: bold;
+    transition: .2s;
+}
+
+.footer-bg{
+    background-color: white;
+    margin-top: 15px;
+}
+
+.btn-r{
+    font-size: 16px;
+}

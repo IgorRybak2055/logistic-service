@@ -37,3 +37,33 @@ func (d deliveryService) CreateDelivery(ctx context.Context, delivery models.Del
 
 	return delivery, err
 }
+
+func (d deliveryService) Deliveries(ctx context.Context) ([]models.Delivery, error) {
+	dlvs, err := d.deliveryRepo.Deliveries(ctx)
+	if err != nil {
+		d.log.Warnf("gettrucks: failed to %s", err)
+		return nil, errors.Wrap(err, "getting company trucks")
+	}
+
+	return dlvs, err
+}
+
+func (d deliveryService) InterestingDeliveries(ctx context.Context, companyID int64) ([]models.Delivery, error) {
+	dlvs, err := d.deliveryRepo.InterestingDeliveries(ctx, companyID)
+	if err != nil {
+		d.log.Warnf("gettrucks: failed to %s", err)
+		return nil, errors.Wrap(err, "getting company trucks")
+	}
+
+	return dlvs, err
+}
+
+func (d deliveryService) Delivery(ctx context.Context, id string) (models.Delivery, error) {
+	dlvs, err := d.deliveryRepo.Delivery(ctx, id)
+	if err != nil {
+		d.log.Warnf("gettrucks: failed to %s", err)
+		return models.Delivery{}, errors.Wrap(err, "getting company trucks")
+	}
+
+	return dlvs, err
+}

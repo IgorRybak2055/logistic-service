@@ -15,12 +15,25 @@ import (
 )
 
 // Company represents possible database actions with an account.
+type Tender interface {
+	Create(ctx context.Context, tender models.Tender) (models.Tender, error)
+}
+
+// Company represents possible database actions with an account.
 type Company interface {
 	Create(ctx context.Context, company models.Company) (models.Company, error)
 }
 
 type Delivery interface {
 	Create(ctx context.Context, delivery models.Delivery) (models.Delivery, error)
+	Deliveries(ctx context.Context) ([]models.Delivery, error)
+	Delivery(ctx context.Context, id string) (models.Delivery, error)
+	InterestingDeliveries(ctx context.Context, companyID int64) ([]models.Delivery, error)
+}
+
+type Truck interface {
+	New(ctx context.Context, truck models.Truck) (models.Truck, error)
+	Trucks(ctx context.Context, companyID int64) ([]models.Truck, error)
 }
 
 // Account represents possible database actions with an account.

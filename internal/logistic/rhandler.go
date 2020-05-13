@@ -60,7 +60,7 @@ func Message(message interface{}) map[string]interface{} {
 }
 
 // Respond does answer with data on API request
-func Respond(w http.ResponseWriter, statusCode int, data map[string]interface{}) {
+func Respond(w http.ResponseWriter, statusCode int, data interface{}) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 

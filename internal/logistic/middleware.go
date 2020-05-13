@@ -3,6 +3,7 @@ package logistic
 
 import (
 	"context"
+	"log"
 	"net/http"
 	"os"
 
@@ -31,12 +32,14 @@ var JwtAuthentication = func(next http.Handler) http.Handler {
 			return []byte(os.Getenv("TOKEN_PASSWORD")), nil
 		})
 		if err != nil {
+			log.Println("malformed authentication token")
 			nErr := newError(http.StatusForbidden, errors.New("malformed authentication token"))
 			RespondError(w, nErr)
 			return
 		}
 
 		if !token.Valid {
+			log.Println("token is not valid")
 			nErr := newError(http.StatusForbidden, errors.New("token is not valid"))
 			RespondError(w, nErr)
 			return

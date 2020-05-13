@@ -276,6 +276,80 @@
                 }
             }
         },
+        "/api/trucks": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get all trucks of company.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Truck"
+                ],
+                "summary": "Get all trucks of company.",
+                "responses": {
+                    "200": {
+                        "description": "response structure: {message:[]truck}",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Truck"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "response structure: {error:\"error message\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Creating new truck.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Truck"
+                ],
+                "summary": "Creating new truck.",
+                "parameters": [
+                    {
+                        "description": "delivery",
+                        "name": "delivery",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Truck"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "response structure: {message:truck}",
+                        "schema": {
+                            "$ref": "#/definitions/models.Truck"
+                        }
+                    },
+                    "400": {
+                        "description": "response structure: {error:\"error message\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/health": {
             "get": {
                 "description": "Health check ragger service",
@@ -385,6 +459,35 @@
                 },
                 "weight_cargo": {
                     "type": "number"
+                }
+            }
+        },
+        "models.Truck": {
+            "type": "object",
+            "properties": {
+                "carrying": {
+                    "type": "number"
+                },
+                "companyID": {
+                    "type": "integer"
+                },
+                "current_location": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "trailer_params": {
+                    "type": "string"
+                },
+                "trailer_type": {
+                    "type": "string"
+                },
+                "year": {
+                    "type": "integer"
                 }
             }
         }

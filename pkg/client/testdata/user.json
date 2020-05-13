@@ -1,0 +1,8 @@
+{
+  "email": "test@domain.com",
+  "password": "password",
+  "tokens": {
+    "access_token":"token",
+    "refresh_token":"refresh_token"
+  }
+}

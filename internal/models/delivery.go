@@ -18,6 +18,7 @@ type Delivery struct {
 	VolumeCargo    float64   `db:"volume_cargo" json:"volume_cargo"`
 	TrailerType    string    `db:"trailer_type" json:"trailer_type"`
 	Price          float64   `db:"price" json:"price"`
+	Status			string   `db:"status" json:"status"`
 	CreatedAt      time.Time `db:"created_at" json:"-"`
 	UpdatedAt      time.Time `db:"updated_at" json:"-"`
 }

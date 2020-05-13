@@ -19,7 +19,7 @@ func NewDeliveryRepository(dbc *sqlx.DB) Delivery {
 	return &delivery{dbc}
 }
 
-// DeleteProject delete user project by ID.
+// Create delete user project by ID.
 func (d delivery) Create(ctx context.Context, delivery models.Delivery) (models.Delivery, error) {
 	var query = ` INSERT INTO delivery
             (
@@ -47,10 +47,14 @@ func (d delivery) Create(ctx context.Context, delivery models.Delivery) (models.
             )
             returning id`
 
+	log.Println("create dlv: ", delivery)
+
 	rows, err := sqlx.NamedQueryContext(ctx, d.dbc, query, delivery)
 	if err != nil {
 		return models.Delivery{}, errors.Wrap(err, "executing query")
 	}
+
+	log.Println("create dlv: ", delivery)
 
 	defer func() {
 		if err = rows.Close(); err != nil {
@@ -66,4 +70,55 @@ func (d delivery) Create(ctx context.Context, delivery models.Delivery) (models.
 	}
 
 	return delivery, nil
+}
+
+// GetProjects returns all users projects.
+func (d delivery) Deliveries(ctx context.Context) ([]models.Delivery, error) {
+	var (
+		query = `SELECT *
+				 FROM   delivery LIMIT 20`
+		dl  []models.Delivery
+		err error
+	)
+
+	err = sqlx.SelectContext(ctx, d.dbc, &dl, query)
+	if err != nil {
+		return nil, errors.Wrap(err, "getting trucks")
+	}
+
+	return dl, nil
+}
+
+// GetProjects returns all users projects.
+func (d delivery) InterestingDeliveries(ctx context.Context, companyID int64) ([]models.Delivery, error) {
+	var (
+		query = `SELECT *
+				 FROM delivery WHERE delivery.company_id = ANY(SELECT * FROM subscribers WHERE company_id = $1)`
+		dl  []models.Delivery
+		err error
+	)
+
+	err = sqlx.SelectContext(ctx, d.dbc, &dl, query, companyID)
+	if err != nil {
+		return nil, errors.Wrap(err, "getting deliveries")
+	}
+
+	return dl, nil
+}
+
+// GetProjects returns all users projects.
+func (d delivery) Delivery(ctx context.Context, id string) (models.Delivery, error) {
+	var (
+		query = `SELECT *
+				 FROM delivery WHERE id = $1`
+		dl  models.Delivery
+		err error
+	)
+
+	err = sqlx.GetContext(ctx, d.dbc, &dl, query, id)
+	if err != nil {
+		return models.Delivery{}, errors.Wrap(err, "getting trucks")
+	}
+
+	return dl, nil
 }

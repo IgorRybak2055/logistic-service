@@ -61,6 +61,25 @@ definitions:
       weight_cargo:
         type: number
     type: object
+  models.Truck:
+    properties:
+      carrying:
+        type: number
+      companyID:
+        type: integer
+      current_location:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      trailer_params:
+        type: string
+      trailer_type:
+        type: string
+      year:
+        type: integer
+    type: object
 host: localhost:8888
 info:
   contact:
@@ -242,6 +261,52 @@ paths:
       summary: Generate Token in ragger
       tags:
       - Token
+  /api/trucks:
+    get:
+      description: Get all trucks of company.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'response structure: {message:[]truck}'
+          schema:
+            items:
+              $ref: '#/definitions/models.Truck'
+            type: array
+        "400":
+          description: 'response structure: {error:"error message"}'
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Get all trucks of company.
+      tags:
+      - Truck
+    post:
+      description: Creating new truck.
+      parameters:
+      - description: delivery
+        in: body
+        name: delivery
+        required: true
+        schema:
+          $ref: '#/definitions/models.Truck'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: 'response structure: {message:truck}'
+          schema:
+            $ref: '#/definitions/models.Truck'
+        "400":
+          description: 'response structure: {error:"error message"}'
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Creating new truck.
+      tags:
+      - Truck
   /health:
     get:
       description: Health check ragger service
